@@ -11,9 +11,9 @@ public class ConnectivityExampleApp {
 	private final static String URL = "jdbc:postgresql://localhost:5432/example";
 	private final static String USER_NAME = "postgres";
 	private final static String PASSWORD = "password";
-	
+
 	public static void main(String[] args) {
-		
+
 		try {
 			connectWithDB();
 		} catch (ClassNotFoundException e) {
@@ -24,19 +24,22 @@ public class ConnectivityExampleApp {
 		}
 	}
 
-	private static void  connectWithDB() throws ClassNotFoundException, SQLException{
+	private static void connectWithDB() throws ClassNotFoundException, SQLException {
 //		Class.forName("com.postgresql.jdbc.Driver");
 		Connection connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
 		Statement statement = connection.createStatement();
-		
-		String query = "select student_name from student where student_id = 1";
-		
-		
-		ResultSet executedQueryResultSet = statement.executeQuery(query);
-		executedQueryResultSet.next();
-		System.out.println(executedQueryResultSet.getString("student_name"));
+
+		String query = "select * from student";
+
+		ResultSet resultSet = statement.executeQuery(query);
+
+		while (resultSet.next()) {
+			String userData = resultSet.getInt(1) + " : " + resultSet.getString(2);
+			System.out.println(userData);
+		}
+
 		statement.close();
 		connection.close();
-		
+
 	}
 }
