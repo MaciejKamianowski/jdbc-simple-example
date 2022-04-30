@@ -29,14 +29,12 @@ public class ConnectivityExampleApp {
 		Connection connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
 		Statement statement = connection.createStatement();
 
-		String query = "select * from student";
-
-		ResultSet resultSet = statement.executeQuery(query);
-
-		while (resultSet.next()) {
-			String userData = resultSet.getInt(1) + " : " + resultSet.getString(2);
-			System.out.println(userData);
-		}
+		String query = "insert into student values (3, 'Attilla')";
+// DDL Data Dafinition Language, DML,  TCL Transaction Control Language
+// DQL Data Query Language
+		
+		int rowsAffected = statement.executeUpdate(query);	
+		System.out.println(rowsAffected + " row/s affected");
 
 		statement.close();
 		connection.close();
