@@ -10,8 +10,10 @@ public class JdbcDaoDemo {
 
 	public static void main(String[] args) {
 		StudentDao dao = new StudentDao();
-		Student s1 = dao.getStudent(1);
-		System.out.println(s1.name);
+		Student s1 = new Student();
+		s1.id = 6;
+		s1.name = "Paul";
+		dao.addStudent(s1);
 		dao.close();
 
 	}
@@ -29,6 +31,8 @@ class StudentDao {
 
 	private final static String GET_NAME_BY_ID_QUERY_STRING = "select s.student_name from student s where s.student_id = ?";
 
+	private final static String INSERT_NEW_STUDENT_QUERY_STRING = "insert into student values(?, ?)";
+
 	public StudentDao() {
 		try {
 			connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
@@ -44,18 +48,34 @@ class StudentDao {
 		try {
 			preparedStatement = connection.prepareStatement(GET_NAME_BY_ID_QUERY_STRING);
 			preparedStatement.setLong(1, id);
-			
+
 			ResultSet resultSet = preparedStatement.executeQuery();
-			while(resultSet.next()) {
+			while (resultSet.next()) {
 				s.name = resultSet.getString(1);
 			}
-			
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
 		return s;
 	}
+	
+	public void addStudent(Student s) {
+		try {
+			preparedStatement = connection.prepareStatement(INSERT_NEW_STUDENT_QUERY_STRING);
+			preparedStatement.setLong(1, s.id);
+			preparedStatement.setString(2, s.name);
+
+			int rowsAffected = preparedStatement.executeUpdate();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
 
 	public void close() {
 		try {
