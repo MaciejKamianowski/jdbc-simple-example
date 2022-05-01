@@ -2,6 +2,7 @@ package jdbc.example;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,18 +26,19 @@ public class ConnectivityExampleApp {
 	}
 
 	private static void connectWithDB() throws ClassNotFoundException, SQLException {
-//		Class.forName("com.postgresql.jdbc.Driver");
+
 		Connection connection = DriverManager.getConnection(URL, USER_NAME, PASSWORD);
-		Statement statement = connection.createStatement();
+		
 
-		int studentId = 4;
-		String studentName = "Falk Maria";
-		String query = "insert into student values (%d, '%s')";
+		int studentId = 5;
+		String studentName = "Roel";
+		String query = "insert into student values (?, ?)";
 
-// DDL Data Dafinition Language, DML,  TCL Transaction Control Language
-// DQL Data Query Language
-
-		int rowsAffected = statement.executeUpdate(String.format(query, studentId, studentName));
+		PreparedStatement statement = connection.prepareStatement(query);
+		statement.setInt(1, studentId);
+		statement.setString(2, studentName);
+		
+		int rowsAffected = statement.executeUpdate();
 		System.out.println(rowsAffected + " row/s affected");
 
 		statement.close();
